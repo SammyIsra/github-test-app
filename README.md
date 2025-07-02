@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GitHub Repository Viewer
 
-## Getting Started
+A Next.js web application that allows users to authenticate with GitHub and view their repositories.
 
-First, run the development server:
+## Features
+
+- GitHub OAuth authentication
+- Display user's repositories with details
+- Repository information including stars, language, privacy status
+- Responsive design with Tailwind CSS
+- Secure token handling with HTTP-only cookies
+
+## Setup Instructions
+
+### 1. Create a GitHub App (Recommended) or OAuth App
+
+#### For GitHub App (Better for Private Repo Access):
+1. Go to [GitHub Settings > Developer settings > GitHub Apps](https://github.com/settings/apps/new)
+2. Fill in the application details:
+   - **GitHub App name**: Your app name (note this for step 3)
+   - **Homepage URL**: `http://localhost:3000`
+   - **User authorization callback URL**: `http://localhost:3000/api/auth/callback`
+   - **Repository permissions**: 
+     - Contents: Read
+     - Metadata: Read
+3. Click "Create GitHub App"
+4. Copy the **Client ID** and generate a **Client Secret**
+
+#### Alternative - OAuth App:
+1. Go to [GitHub Settings > Developer settings > OAuth Apps](https://github.com/settings/applications/new)
+2. Follow similar steps as above
+
+### 2. Update Installation URL
+
+In `src/app/util/octokit.ts`, replace `'your-app-name'` with your actual GitHub App name:
+```typescript
+export function getInstallationUrl(): string {
+  return `https://github.com/apps/YOUR_ACTUAL_APP_NAME/installations/new`;
+}
+```
+
+### 3. Environment Configuration
+
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. Update `.env.local` with your GitHub OAuth App credentials:
+   ```env
+   NEXT_PUBLIC_GITHUB_CLIENT_ID=your_github_client_id_here
+   GITHUB_CLIENT_SECRET=your_github_client_secret_here
+   ```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Authentication Flow**:
+   - User clicks "Login with GitHub"
+   - Redirected to GitHub OAuth authorization
+   - GitHub redirects back with authorization code
+   - Server exchanges code for access token
+   - Token stored in secure HTTP-only cookie
 
-## Learn More
+2. **Repository Fetching**:
+   - Authenticated requests to GitHub API
+   - Displays repositories with metadata
+   - Real-time updates and refresh functionality
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── auth/callback/     # OAuth callback handler
+│   │   └── repos/             # Repository API endpoint
+│   ├── util/
+│   │   └── octokit.ts         # GitHub API utilities
+│   ├── layout.tsx
+│   └── page.tsx               # Main application component
+└── ...
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Technologies Used
 
-## Deploy on Vercel
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Octokit** - GitHub API client
+- **GitHub OAuth** - Authentication
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Security Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- HTTP-only cookies for token storage
+- Secure cookie settings for production
+- Environment variable protection
+- CSRF protection via state parameter
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
