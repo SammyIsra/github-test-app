@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { exchangeCodeForToken } from '@/app/util/octokit';
 
+/**
+ * Callback from OAuth flow to handle GitHub OAuth response.
+ * @param request 
+ * @returns 
+ */
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get('code');

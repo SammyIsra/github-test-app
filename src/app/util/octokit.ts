@@ -17,7 +17,6 @@ export function getAuthorizationUrl(redirectUri: string, state?: string): string
     state: state || Math.random().toString(36).substring(7),
     // Add scope to request access to private repositories
     scope: 'repo',
-
   });
   
   return `https://github.com/login/oauth/authorize?${params.toString()}`;
@@ -68,8 +67,7 @@ export async function getRepoList(accessToken: string): Promise<UserRepositories
     const { data } = await octokit.rest.repos.listForAuthenticatedUser({
       sort: 'updated',
       per_page: 30,
-      // Remove visibility filter to get both public and private repos
-      // Remove affiliation filter to get all accessible repos
+      affiliation: 'owner,collaborator,organization_member',
     });
 
     // Debug logging for GitHub App limitations

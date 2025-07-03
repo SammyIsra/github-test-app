@@ -46,13 +46,18 @@ export default function Home() {
   const handleLogin = () => {
     const redirectUri = `${window.location.origin}/api/auth/callback`;
     const authUrl = getAuthorizationUrl(redirectUri);
-    window.location.href = authUrl;
+    window.location.assign(authUrl);
   };
 
   const handleInstallApp = () => {
     const installUrl = getInstallationUrl();
     window.open(installUrl, "_blank");
   };
+
+  const logout = async () => {
+    await fetch("/api/auth/logout");
+    setIsAuthenticated(false);
+  }
 
   if (loading) {
     return (
@@ -161,6 +166,12 @@ export default function Home() {
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
             >
               Refresh
+            </button>
+            <button
+              onClick={logout}
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+            >
+              Logout
             </button>
           </div>
         </div>
