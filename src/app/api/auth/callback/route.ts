@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
     );
 
     return NextResponse.redirect(
-      `${baseUrl}/?error=token_exchange_failed&details=${errorMsg}&clientId=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
+      `${baseUrl}/?error=token_exchange_failed&details=${errorMsg}`
     );
   }
 }
