@@ -50,8 +50,12 @@ export async function GET(request: NextRequest) {
         ? "https://polite-sea-088756010.2.azurestaticapps.net"
         : new URL("/", request.url).origin;
 
+    const errorMsg = encodeURIComponent(
+      error instanceof Error ? error.message : String(error)
+    );
+
     return NextResponse.redirect(
-      `${baseUrl}/?error=token_exchange_failed&clientId=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
+      `${baseUrl}/?error=token_exchange_failed&details=${errorMsg}&clientId=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
     );
   }
 }
