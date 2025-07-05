@@ -45,13 +45,13 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (error) {
     console.error('OAuth callback error:', error);
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? "https://polite-sea-088756010.2.azurestaticapps.net"
+        : new URL("/", request.url).origin;
+
     return NextResponse.redirect(
-      new URL(
-        `/?error=token_exchange_failed&url=&${encodeURI(
-          request.url
-        )}&clientId=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`,
-        request.url
-      )
+      `${baseUrl}/?error=token_exchange_failed&clientId=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
     );
   }
 }
