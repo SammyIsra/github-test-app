@@ -46,7 +46,12 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('OAuth callback error:', error);
     return NextResponse.redirect(
-      new URL('/?error=token_exchange_failed', request.url)
+      new URL(
+        `/?error=token_exchange_failed&url=&${encodeURI(
+          request.url
+        )}&clientId=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`,
+        request.url
+      )
     );
   }
 }
