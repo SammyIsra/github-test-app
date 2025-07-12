@@ -1,6 +1,13 @@
 # GitHub Repository Viewer
 
-A Next.js web application that allows users to authenticate with GitHub and view their repositories.
+A Next.js web application that allows users to authenticate with GitHub and view their repositories. 
+
+Project to find out how GitHub authentication works, and workflows to deploy to different clouds.
+
+Currently this project is hosted at:
+- Azure: https://polite-sea-088756010.2.azurestaticapps.net/
+- Netlify: https://view-my-repos.netlify.app/
+  - Much better URL selection imo 
 
 ## Features
 
