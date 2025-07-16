@@ -12,6 +12,9 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [visibleRepos, setVisibleRepos] = useState<Repository[]>([]);
+  const [seePrivate, setSeePrivate] = useState<boolean>(true);
+  const [seeArchived, setSeeArchived] = useState<boolean>(true);
 
   useEffect(() => {
     fetchRepos();
@@ -43,6 +46,14 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    setVisibleRepos(
+      repos
+        .filter((repo) => seeArchived || !repo.archived)
+        .filter((repo) => seePrivate || !repo.private)
+    );
+  }, [repos, seeArchived, seePrivate]);
+
   const handleLogin = () => {
     const redirectUri = `${window.location.origin}/api/auth/callback`;
     const authUrl = getAuthorizationUrl(redirectUri);
@@ -57,7 +68,7 @@ export default function Home() {
   const logout = async () => {
     await fetch("/api/auth/logout");
     setIsAuthenticated(false);
-  }
+  };
 
   if (loading) {
     return (
@@ -207,8 +218,22 @@ export default function Home() {
           </div>
         )}
 
+        <div className="flex gap-2 mb-3">
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors text-sm"
+            onClick={() => setSeePrivate(!seePrivate)}
+          >
+            {seePrivate ? "Hide private repos" : "Show private repos"}
+          </button>
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors text-sm"
+            onClick={() => setSeeArchived(!seeArchived)}
+          >
+            {seeArchived ? "Hide archived repos" : "Show archived repos"}
+          </button>
+        </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {repos.map((repo) => (
+          {visibleRepos.map((repo) => (
             <div
               key={repo.id}
               className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
