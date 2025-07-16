@@ -1,27 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { exchangeCodeForToken } from '@/app/util/octokit';
+import { getRequestOrigin } from "@/app/util/url";
 
 /**
  * Callback from OAuth flow to handle GitHub OAuth response.
- * @param request 
- * @returns 
+ * @param request
+ * @returns
  */
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const code = searchParams.get('code');
-  const error = searchParams.get('error');
+  const code = searchParams.get("code");
+  const error = searchParams.get("error");
 
-  let baseUrl: string;
-
-  if (process.env.NODE_ENV === "production") {
-    const forwardedHost = request.headers.get("x-forwarded-host");
-    const hostHeader = request.headers.get("host");
-    const host = forwardedHost || hostHeader;
-    const protocol = request.headers.get("x-forwarded-proto") || "https";
-    baseUrl = `${protocol}://${host}`;
-  } else {
-    baseUrl = new URL(request.url).origin;
-  }
+  const baseUrl = getRequestOrigin(request, process.env.NODE_ENV);
 
   // Handle OAuth errors
   if (error) {
