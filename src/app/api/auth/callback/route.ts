@@ -31,8 +31,12 @@ export async function GET(request: NextRequest) {
     const redirectUri = new URL("/api/auth/callback", baseUrl).toString();
     const accessToken = await exchangeCodeForToken(code, redirectUri);
 
+    const url = new URL("/", baseUrl);
+    url.search = "";
     // Create response and set secure cookie
-    const response = NextResponse.redirect(new URL("/", baseUrl));
+    const response = NextResponse.redirect(url, {
+      status: 303,
+    });
 
     // Set httpOnly cookie for security
     response.cookies.set("github_token", accessToken, {
