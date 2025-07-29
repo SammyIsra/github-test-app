@@ -7,7 +7,8 @@ Project to find out how GitHub authentication works, and workflows to deploy to 
 Currently this project is hosted at:
 - Azure: https://polite-sea-088756010.2.azurestaticapps.net/
 - Netlify: https://view-my-repos.netlify.app/
-  - Much better URL selection imo 
+  - Much better URL selection imo
+- Vercel: https://github-test-app-one.vercel.app
 
 ## Features
 
